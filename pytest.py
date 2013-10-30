@@ -15,7 +15,7 @@ secs_between_loops = 2
 wait_after_ng_restart = 3
 cwd = os.getcwd()
 ptrn_first_filter = re.compile('.*\.(rb|erb|yml)$')
-ptrn_second_filter = re.compile('^/(\.git|tmp)/.*') #don't count these skipped files
+ptrn_second_filter = re.compile('^/(\.git|tmp|public\/assets)/.*') #don't count these skipped files
 start_nailgun_server_command = 'jruby --ng-server '
 DEBUG = False
 VERBOSE = False
@@ -83,6 +83,9 @@ testpatterns = [
     #change to app/mailers/[name] -- rerun mailer test
     [re.compile('^/app/mailers/(?P<singular>.*)\_mailer\.rb$'),
             ['/test/mailers/SINGULAR_mailer_test.rb']],
+
+    #change to any validation in validators directory -- rerun all
+    [re.compile('^/app/validators/.*\.rb$'), ['ALL']],
     
     #change to /db/*.rb send notice to consider rake db:test:prepare
     [re.compile('^/db/.*\.rb$'),['DBCHANGE']]
@@ -363,7 +366,7 @@ def run_dirty_tests():
             args = ['jruby', '--ng','-I.:lib:test','-rubygems','-e',tests_arg]
             cmd = " ".join(args)
             pverbose("Running:\t" + cmd)
-            print("\nSubmitted " + str(nTests) + " test files ----- The Oxen is slow but the Earth is patient " + "-" * 5)
+            print("\nSubmitted " + str(nTests) + " test files ---- The Oxen are slow but the Earth is patient " + "-" * 4)
             output =  subprocess.getoutput(cmd)
             print_test_output(output)            
     return
